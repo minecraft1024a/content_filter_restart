@@ -1,27 +1,34 @@
 {
-  "name": "content_filter_restart",
-  "version": "1.0.0",
-  "description": "检测 LLM 内容审查/禁止内容错误并自动重启对话流",
-  "author": "MoFox Team",
-  "dependencies": {
-    "plugins": [],
-    "components": []
-  },
-  "include": [
-    {
-      "component_type": "event_handler",
-      "component_name": "content_filter_restart_handler",
-      "dependencies": [],
-      "enabled": true
-    }
-  ],
-  "entry_point": "plugin.py",
-  "api_version": {
-    "log_api": "1.0.0",
-    "stream_api": "1.0.0"
-  },
-  "categories": ["moderation"],
-  "tags": ["llm", "restart", "content-filter", "gemini"],
-  "python_dependencies": [],
-  "dependencies_required": true
+    "name": "content_filter_restart",
+    "version": "1.1.0",
+    "description": "检测 LLM 内容审查/禁止内容错误并自动重启对话流",
+    "author": "MoFox Team",
+    "dependencies": {
+        "plugins": [],
+        "components": []
+    },
+    "include": [
+        {
+            "component_type": "event_handler",
+            "component_name": "content_filter_restart_handler",
+            "dependencies": [],
+            "enabled": true
+        }
+    ],
+    "entry_point": "plugin.py",
+    "api_version": {
+        "log_api": "1.0.0",
+        "stream_api": "1.0.0"
+    },
+    "categories": [
+        "moderation"
+    ],
+    "tags": [
+        "llm",
+        "restart",
+        "content-filter",
+        "gemini"
+    ],
+    "python_dependencies": [],
+    "dependencies_required": true
 }

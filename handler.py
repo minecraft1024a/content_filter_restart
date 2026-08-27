@@ -72,13 +72,11 @@ class ContentFilterRestartHandler(BaseEventHandler):
 
     def __init__(self, plugin: Any) -> None:
         super().__init__(plugin)
-        # 按流记录最近的重启时间，用于冷却控制
-        self._restart_cooldown: dict[str, float] = {}
         # 每个流在冷却窗口内的最大重启次数
         self._max_restarts_per_window: int = 3
         # 冷却窗口（秒）
         self._cooldown_window: float = 300.0
-        # 按流记录重启次数
+        # 按流记录重启时间戳
         self._restart_counts: dict[str, list[float]] = {}
 
     def _check_cooldown(self, stream_id: str) -> bool:
@@ -114,16 +112,14 @@ class ContentFilterRestartHandler(BaseEventHandler):
         error = params.get("error")
         error_type = params.get("error_type", "")
         error_message = params.get("error_message", "")
-        stream = params.get("stream")
         request_name = params.get("request_name", "")
 
         if not isinstance(error, BaseException) or not _is_content_filter_error(error):
             return EventDecision.SUCCESS, params
 
-        # 获取 stream_id
-        stream_id = ""
-        if stream is not None:
-            stream_id = getattr(stream, "stream_id", "")
+        # 获取 stream_id（存在 meta_data 中）
+        meta_data = params.get("meta_data", {})
+        stream_id = meta_data.get("stream_id", "") if isinstance(meta_data, dict) else ""
         if not stream_id:
             logger.debug(
                 f"内容审查错误但无法获取 stream_id，跳过重启: "
