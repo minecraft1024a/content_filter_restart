@@ -137,8 +137,9 @@ class ContentFilterRestartHandler(BaseEventHandler):
         if self._check_cooldown(stream_id):
             return EventDecision.SUCCESS, params
 
-        # 执行重启
+        # 执行重启并清空上下文
         try:
+            from src.app.plugin_system.api import stream_api
             from src.core.transport.distribution.stream_loop_manager import (
                 get_stream_loop_manager,
             )
@@ -157,9 +158,20 @@ class ContentFilterRestartHandler(BaseEventHandler):
                     f"内容审查错误触发流重启失败（流可能未运行）: "
                     f"stream={stream_id[:8]}, request={request_name}"
                 )
+
+            # 清空上下文，避免残留的被审查内容再次触发
+            cleared = await stream_api.load_and_clear_context(stream_id)
+            if cleared:
+                logger.info(
+                    f"内容审查错误后清空上下文成功: stream={stream_id[:8]}"
+                )
+            else:
+                logger.warning(
+                    f"内容审查错误后清空上下文失败: stream={stream_id[:8]}"
+                )
         except Exception as e:
             logger.error(
-                f"内容审查错误触发流重启异常: stream={stream_id[:8]}, "
+                f"内容审查错误触发流重启/清空上下文异常: stream={stream_id[:8]}, "
                 f"request={request_name}, error={e}"
             )
 
