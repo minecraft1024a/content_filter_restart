@@ -18,7 +18,7 @@
     "entry_point": "plugin.py",
     "api_version": {
         "log_api": "1.0.0",
-        "stream_api": "1.0.0"
+        "stream_api": "2.0.0"
     },
     "categories": [
         "moderation"
